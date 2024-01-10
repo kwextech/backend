@@ -3,8 +3,8 @@ from .models import CustomUser, Payment,Currency, History, Withdrawal, Investmen
 
 
 
-admin.site.site_header = 'Apexfortitude Administrator'
-admin.site.site_title = 'Apexfortitude Administrator'
+admin.site.site_header = 'Zenithport Administrator'
+admin.site.site_title = 'Zenithport Administrator'
 
 
 
