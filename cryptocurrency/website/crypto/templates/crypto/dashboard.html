@@ -153,6 +153,7 @@
           <th scope="col">Action</th>
           <th scope="col">Amount</th>
           <th scope="col">Type</th>
+          <th scope="col">Date</th>
           <th scope="col">Status</th>
         </tr>
       </thead>
@@ -163,6 +164,7 @@
           <td>{{datas.action}}</td>
           <td>${{datas.amount}}</td>
           <td>{% if datas.currency is None%} dollar {% else%} {{datas.currency}} {% endif %}</td>
+          <td>{{datas.date_created.date}}({{datas.date_created.time}})</td>
           {% if datas.status == True %}
           <td><i class="fa-solid fa-circle-check" style="color: green;"></i> Confirmed</td>   
           {% else %}
