@@ -52,11 +52,21 @@
                     select:$('#select').val(),
                 },
                 success:function(response){
-                    Swal.fire({
+                    if (response == 'Number of Reinvestment reached for Starter'){
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Number of Reinvestment reached for Starter',
+                        })
+                        window.location.reload()
+                    }
+                    else{
+                        Swal.fire({
                         icon: 'success',
                         title: 'Investment successful',
-                    })
-                    window.location.href = `${window.location.origin}/Profile-dashboard`
+                        })
+                        window.location.href = `${window.location.origin}/Profile-dashboard`
+                    }
+                    
                 },
                 error:function(){
                     Swal.fire({
@@ -78,11 +88,20 @@
                         select:$('#select').val(),
                     },
                     success:function(response){
+                        if (response == 'Number of Reinvestment reached for Premium'){
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Investment successful',
+                        icon: 'error',
+                        title: 'Number of Reinvestment reached for Premium',
+                        })
+                        window.location.reload()
+                    }
+                    else{
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Investment successful',
                         })
                         window.location.href = `${window.location.origin}/Profile-dashboard`
+                    }
                     },
                     error:function(){
                         Swal.fire({

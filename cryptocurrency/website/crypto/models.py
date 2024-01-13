@@ -88,6 +88,10 @@ class Payment(models.Model):
             amount = self.amount
             user = self.user
             currency = self.payment_option
+            reinvestment =  Reinvestment.objects.filter(user = user)
+            for i in reinvestment:
+                i.number_of_investment = 0
+                i.save()
             DepositMail(user,amount, currency)
         super().save(*args, **kwargs)
 
@@ -123,7 +127,8 @@ class Plan(models.Model):
     name = models.CharField(max_length=30, blank=True, null=True)
     profit =  models.IntegerField()
     duration = models.IntegerField()
-    referal =  models.IntegerField()  
+    referal =  models.IntegerField()
+     
 
     def __str__(self):
         return self.name
@@ -282,6 +287,16 @@ class ReferalBonus(models.Model):
         except:
             pass  
         super().save(*args, **kwargs )
+
+class Reinvestment(models.Model):
+    user = models.ForeignKey(User, on_delete= models.CASCADE, blank=True, null=True)
+    plan = models.CharField(max_length=100, blank=True, null=True)
+    number_of_investment =  models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user}-------{self.number_of_investment}"
+
+
 
 
 

@@ -10,7 +10,7 @@ class passwordgenerator(PasswordResetTokenGenerator):
 TokenGenerator = passwordgenerator()
 
 def SendReferalMail(user,referer):
-    email_subject = 'You have a new direct signup on Apexfortitude.com'
+    email_subject = 'You have a new direct signup on Zenithport'
     email_body =  render_to_string('email/referalmail.html',{
         'user':user.username,
         'referer': referer.user,
@@ -20,7 +20,7 @@ def SendReferalMail(user,referer):
 
     })
     email = EmailMessage(subject=email_subject, body=email_body,
-        from_email='Apexfortitude <admin@apexfortitude.com>', to=[referer.user.email]
+        from_email='ZenithPort <support@zenithport.com>', to=[referer.user.email]
         )
     email.content_subtype = 'html'
     email.send()
@@ -34,7 +34,7 @@ def DepositMail(user,amount,currency):
         'currency': currency
     })
     email = EmailMessage(subject=email_subject, body=email_body,
-        from_email='Apexfortitude <admin@apexfortitude.com>', to=[user.email]
+        from_email='ZenithPort <support@zenithport.com>', to=[user.email]
         )
     email.content_subtype = 'html'
     email.send()
@@ -47,14 +47,14 @@ def WithdrawalMail(user, amount):
         'amount': amount,
     })
     email = EmailMessage(subject=email_subject, body=email_body,
-        from_email='Apexfortitude <admin@apexfortitude.com>', to=[user.email]
+        from_email='ZenithPort <support@zenithport.com>', to=[user.email]
         )
     email.content_subtype = 'html'
     email.send()
 
 
 def CommisionMail(user,referer, bonus):
-    email_subject = 'Apexfortitude.com Referral Commission'
+    email_subject = 'Zenithport Referral Commission'
     email_body =  render_to_string('email/commision.html',{
         'user':referer.username,
         'bonus': bonus,
@@ -62,7 +62,7 @@ def CommisionMail(user,referer, bonus):
 
     })
     email = EmailMessage(subject=email_subject, body=email_body,
-        from_email='Apexfortitude <admin@apexfortitude.com>', to=[referer.email]
+        from_email='ZenithPort <support@zenithport.com>', to=[referer.email]
         )
     email.content_subtype = 'html'
     email.send()
@@ -77,7 +77,7 @@ def TransferMail(user,referer, amount):
 
     })
     email = EmailMessage(subject=email_subject, body=email_body,
-        from_email='Apexfortitude <admin@apexfortitude.com>', to=[user.email]
+        from_email='ZenithPort <support@zenithport.com>', to=[user.email]
         )
     email.content_subtype = 'html'
     email.send()
@@ -91,7 +91,7 @@ def TransferRecieverMail(referer, amount, user):
 
     })
     email = EmailMessage(subject=email_subject, body=email_body,
-        from_email='Apexfortitude <admin@apexfortitude.com>', to=[user.email]
+        from_email='ZenithPort <support@zenithport.com>', to=[user.email]
         )
     email.content_subtype = 'html'
     email.send()
