@@ -332,16 +332,14 @@ def notification(request):
 # Api endpoint for validating earning and investment
 @api_view(['GET','POST', 'PUT'])
 def validateEarning(request):
-    if request.method == 'POST':
-        earn =  SystemEaring.objects.filter(is_active=True)
-        invest =  Investment.objects.filter(is_active=True)
-        for x in earn: 
-            x.save()
-        for y in invest:
-            y.save()
-        return Response({'message': 'Processed Successfully'}, status=status.HTTP_202_ACCEPTED)
-    else:
-        return Response({'message':'Error Processing'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    earn =  SystemEaring.objects.filter(is_active=True)
+    invest =  Investment.objects.filter(is_active=True)
+    for x in earn: 
+        x.save()
+    for y in invest:
+        y.save()
+    return Response({'message': 'Processed Successfully'}, status=status.HTTP_202_ACCEPTED)
+        
 
 
 
