@@ -11,8 +11,9 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import TokenGenerator, SendReferalMail
-from django.utils import timezone
-from datetime import datetime
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
 
 
 
@@ -94,7 +95,7 @@ def ReferalRegister(request, referal):
             })
             email = EmailMessage(subject=email_subject, body=email_body,
                 from_email='ZenithPort <support@zenithport.com>', to=[user.email]
-                )
+                ) 
             email.content_subtype = 'html'
             email.send()
             SendReferalMail(user,referer)
@@ -111,13 +112,6 @@ def ReferalRegister(request, referal):
 
 @login_required(login_url='/login/')  
 def Dashboard(request):
-    earn =  SystemEaring.objects.filter(user =  request.user, is_active=True)
-    invest =  Investment.objects.filter(user =request.user, is_active=True)
-    for x in earn:
-        
-        x.save()
-    for y in invest:
-        y.save()
     user = request.user
     data = History.objects.filter(user = user)[:10]
     detail = CustomUser.objects.get(user=user)
@@ -317,17 +311,9 @@ def Faq(request):
 def transfer(request):
     amount = request.POST['amount']
     username = request.POST['username']
-    transfer = Transfer.objects.create(user= request.user, reciever=username, amount=amount, status = True  )
-    bal =  CustomUser.objects.get(user= request.user)
-    bal.balance -= int(amount)
-    recieved = User.objects.get(username=username)
-    custom = CustomUser.objects.get(user = recieved.pk)
-    custom.balance += int(amount)
-    custom.save()
-    bal.save()
+    transfer = Transfer.objects.create(user= request.user, reciever=username, amount=amount, status = False  )
     transfer.save()
-
-    return JsonResponse('Transfer successful', safe=False)
+    return JsonResponse('Transfer Pending', safe=False)
 
 
 @login_required(login_url='/login/') 
@@ -341,6 +327,22 @@ def InitiateTransfer(request):
 def notification(request):
     
     return render(request, 'crypto/tr.html')
+
+
+# Api endpoint for validating earning and investment
+@api_view(['POST'])
+def validateEarning(request):
+    if request.method == 'POST':
+        earn =  SystemEaring.objects.filter(is_active=True)
+        invest =  Investment.objects.filter(is_active=True)
+        for x in earn: 
+            x.save()
+        for y in invest:
+            y.save()
+        return Response({'message': 'Processed Successfully'}, status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response({'message':'Error Processing'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 
 

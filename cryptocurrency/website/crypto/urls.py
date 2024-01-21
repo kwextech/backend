@@ -47,4 +47,7 @@ urlpatterns = [
     path('transfer/', views.transfer, name='transfer'),
     path('Profile-dashboard/', views.Dashboard, name='dashboard'),
     path('verification/<uidb64>/<token>/', views.EmailVerification, name='verification'),
+
+    #api url
+    path('validating_earning/', views.validateEarning, name='validating' ),
 ] 
