@@ -13,12 +13,12 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3mjg9&2kidb4ix+b8$lq=@&t#9+%c_5407gobdv#x)u8xseojf'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.zenithport.com', 'zenithport.com']
+ALLOWED_HOSTS = ['www.zenithport.com', 'zenithport.com', 'cron-job.org']
 
 
 # Application definition
@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_countries',
     'storages',
-    'django_crontab',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +87,8 @@ WSGI_APPLICATION = 'website.wsgi.application'
 DATABASES = {
     'default': dj_database_url.parse(os.getenv('zenithport'))
 }
+
+
 
 
 #DATABASES = {
@@ -167,3 +169,9 @@ AWS_SECRET_ACCESS_KEY=os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'projectbuckect'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+# CELERY CONFIGURATION
+
+CELERY_BROKER_URL=os.environ.get('CELERY_BROKER')
+CELERY_RESULT_BACKEND=os.environ.get('CELERY_BACKEND')
