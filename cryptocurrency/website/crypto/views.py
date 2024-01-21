@@ -330,7 +330,7 @@ def notification(request):
 
 
 # Api endpoint for validating earning and investment
-@api_view(['POST'])
+@api_view(['GET','POST', 'PUT'])
 def validateEarning(request):
     if request.method == 'POST':
         earn =  SystemEaring.objects.filter(is_active=True)
