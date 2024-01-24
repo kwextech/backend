@@ -228,26 +228,33 @@ class SystemEaring(models.Model):
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user}---------{self.balance}"
+        return f"{self.user}---------{self.balance}============{self.is_active}"
     
     def save(self, *args, **kwargs):
         plans = Plan.objects.get(name = str(self.invest.plan))
+        total =  CustomUser.objects.filter(user=self.user)
         fig =  timezone.now().date() - self.date_created.date()
         diff = fig.days
-        if diff == self.num:
-            if timezone.now() < self.date_expiration:      
+        profit =  plans.profit
+        profit_per_day = ((profit * int(self.invest.amount)))/100
+        
+
+        if timezone.now() < self.date_expiration: 
+            if self.num == (diff + 1) and self.balance == diff * profit_per_day:              
+                pass
+            elif ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
+                self.balance += profit_per_day
                 self.num += 1
-                profit =  plans.profit
-                self.balance += ((profit * int(self.invest.amount)))/100
-                total =  CustomUser.objects.get(user=self.user)
-                total.balance += ((profit * int(self.invest.amount)))/100
-                total.save()
+                total =  CustomUser.objects.filter(user=self.user)
+                for i in total:
+                    i.balance += profit_per_day
+                    i.save()
             else:
-                total =  CustomUser.objects.get(user=self.user)
-                total.balance += self.balance
-                self.is_active = False
+                self.num = diff + 1
+                self.balance = diff * profit_per_day                           
         else:
-            pass
+            self.is_active = False
+
         super().save(*args, **kwargs)
 
 
