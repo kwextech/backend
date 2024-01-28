@@ -238,22 +238,24 @@ class SystemEaring(models.Model):
         profit =  plans.profit
         profit_per_day = ((profit * int(self.invest.amount)))/100
         
-
-        if timezone.now() < self.date_expiration: 
-            if self.num == (diff + 1) and self.balance == diff * profit_per_day:              
-                pass
-            elif ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
-                self.balance += profit_per_day
-                self.num += 1
-                total =  CustomUser.objects.filter(user=self.user)
-                for i in total:
-                    i.balance += profit_per_day
-                    i.save()
-            else:
-                self.num = diff + 1
-                self.balance = diff * profit_per_day                           
+        if self.num == 0:
+            pass
         else:
-            self.is_active = False
+            if timezone.now() < self.date_expiration: 
+                if self.num == (diff + 1) and self.balance == diff * profit_per_day:              
+                    pass
+                elif ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
+                    self.balance += profit_per_day
+                    self.num += 1
+                    total =  CustomUser.objects.filter(user=self.user)
+                    for i in total:
+                        i.balance += profit_per_day
+                        i.save()
+                else:
+                    self.num = diff + 1
+                    self.balance = diff * profit_per_day                           
+            else:
+                self.is_active = False
 
         super().save(*args, **kwargs)
 

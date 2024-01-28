@@ -50,7 +50,7 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'referal' %}">
               <i class="fa-solid fa-file-contract nav-icon"></i>Referral</a>
             </li>
-            {% if user.is_staff == true %}
+            {% if user.is_staff %}
             <li class="nav-item"><a class="nav-link" href="{% url 'email' %}">
               <i class="fa-solid fa-envelope nav-icon"></i>Send Email</a>
             </li>
