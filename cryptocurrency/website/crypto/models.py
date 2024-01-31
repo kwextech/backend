@@ -239,7 +239,7 @@ class SystemEaring(models.Model):
         profit_per_day = ((profit * int(self.invest.amount)))/100
         
         if self.num == 0:
-            pass
+            self.num += 1
         else:
             if timezone.now() < self.date_expiration: 
                 if self.num == (diff + 1) and self.balance == diff * profit_per_day:              
