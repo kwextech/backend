@@ -247,14 +247,13 @@ class SystemEaring(models.Model):
                 elif ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
                     self.balance += profit_per_day
                     self.num += 1
-                    total =  CustomUser.objects.filter(user=self.user)
-                    for i in total:
-                        i.balance += profit_per_day
-                        i.save()
                 else:
                     self.num = diff + 1
                     self.balance = diff * profit_per_day                           
             else:
+                total =  CustomUser.objects.get(user=self.user)
+                total.balance += self.balance
+                total.save()
                 self.is_active = False
 
         super().save(*args, **kwargs)
