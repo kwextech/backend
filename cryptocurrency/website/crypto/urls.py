@@ -31,6 +31,7 @@ urlpatterns = [
     path('investment/', views.investment, name='investment'),
     path('faq/', views.Faq, name='faq'),
     path('terms_and_conditions/', views.terms, name='terms'),
+    path('update_notification/', views.notification, name='update_notification'),
 
     path('', views.home, name='home'),
 

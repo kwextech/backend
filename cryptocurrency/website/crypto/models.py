@@ -217,10 +217,17 @@ class Notification(models.Model):
         return self.subject
     
 
+class NotificationVisibility(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    notification_id =  models.IntegerField()
+
+    def __str__(self):
+        return f"{self.user}  id: {self.notification_id}"
+
 class SystemEaring(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     invest = models.ForeignKey(Investment, on_delete=models.CASCADE, blank=True, null=True)
-    num =  models.IntegerField(default=1)
+    num =  models.IntegerField(default=0)
     plan = models.CharField(max_length=50, blank=True, null=True)   
     balance = models.IntegerField(default=0)
     date_expiration =  models.DateTimeField(default=timezone.now)
@@ -238,20 +245,23 @@ class SystemEaring(models.Model):
         profit =  plans.profit
         profit_per_day = ((profit * int(self.invest.amount)))/100
         
-        if timezone.now() <= self.date_expiration: 
-            if self.num == (diff + 1) and self.balance == diff * profit_per_day:              
-                pass
-            elif ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
-                self.balance += profit_per_day
-                self.num += 1
-            else:
-                self.num = diff + 1
-                self.balance = diff * profit_per_day                           
+        if diff == 0:
+            pass
         else:
-            total =  CustomUser.objects.get(user=self.user)
-            total.balance += self.balance
-            total.save()
-            self.is_active = False
+            if timezone.now() <= self.date_expiration: 
+                if self.num == (diff + 1) and self.balance == diff * profit_per_day:              
+                    pass
+                elif ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
+                    self.balance += profit_per_day
+                    self.num += 1
+                else:
+                    self.num = diff + 1
+                    self.balance = diff * profit_per_day                           
+            else:
+                total =  CustomUser.objects.get(user=self.user)
+                total.balance += self.balance
+                total.save()
+                self.is_active = False
 
         super().save(*args, **kwargs)
 
