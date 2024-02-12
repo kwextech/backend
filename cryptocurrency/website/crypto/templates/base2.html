@@ -71,32 +71,41 @@
           </ul>
         </div>
         <div class="wrapper d-flex flex-column min-vh-100 bg-light">
-          <header class="header header-sticky mb-4">
+          <header class="header header-fixed mb-4">
             <div class="container-fluid">
               <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
                 <i class="fa-solid fa-bars"></i>
               </button>
-              <ul class="header-nav ms-3">
-                <li class="nav-item dropdown"><a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <div class="avatar avatar-md"><i class="fa-regular fa-bell"><sup style="background-color: red; border-radius: 50%; color: white; padding: 2px 0; font-size: x-small;">{% if num is None %}0{% else %}{{num}}{% endif %}</sup></i></div>
+              <!--Notification begin-->
+              <ul class="header-nav ms-auto">
+                <!-- message notification -->
+
+                <li class="nav-item dropdown" id="bell"><a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <div class="avatar avatar-md"><i class="fa-regular fa-bell"><sup style="background-color: red; border-radius: 50%; color: white; padding: 2px 3px; font-size: x-small;" id="notify" >{% if num is None %}0{% else %}{{num}}{% endif %}</sup></i></div>
                   </a>
                   <div class="dropdown-menu dropdown-menu-end pt-0">
                     <div class="dropdown-header bg-light py-2" style="width: 45vh;">
                       <div class="fw-semibold" style="color: black ; padding-bottom: 10px;">Messages</div>
                     </div>
+                    
+                    {% if item is not None %}
                     {% for d in item %}
-                    <div class="dropdown" style="padding-left: 10px;">
-                      <p style="font-weight: bold; text-transform: uppercase; margin: 0;">{{d.subject}}<span style="float: right; padding-right: 10px; ">{{d.date_created|date:'M D, Y'}}</span></p>
-                      <p style="font-size: 150;">{{d.message}}</p>
+                    <div class="dropdown" style="padding-left: 10px;" id="msg{{d.pk}}">
+                      <div>
+                        <p style="font-weight: bold; text-transform: uppercase; margin: 0;">{{d.subject}}</p>
+                        <span style="float: right; padding-right: 10px;"><i class="fa-solid fa-trash" id="{{d.pk}}" style="color: red;"></i></span>
+                        <small style="font-weight: bold;">({{d.date_created|date:'M D, Y'}})</small>
+                      </div>
+                      <p class="message" style="font-size: 150;">{{d.message}}</p>  
                     </div> 
                     <hr>
                     {% endfor %}
-                    
-                    
+                    {% else %}
+                    {{empty}}
+                    {% endif %}
                   </div>
                 </li>
               </ul>
-              <!--Notification -->
             </div>
             <div class="header-divider"></div>
             <div class="container-fluid">
@@ -113,6 +122,39 @@
             </div>
           </footer>
         </div>
+
+        <script>
+          var token =  '{{csrf_token}}'
+          const bell = document.getElementById('bell')
+          const del = document.querySelectorAll('.fa-trash')
+          const notify = document.getElementById('notify')
+          bell.addEventListener('click', (e)=>{
+            e.stopPropagation()
+          })
+          del.forEach((e)=>{
+            e.addEventListener('click', (d)=>{
+              $.ajax({
+                url: '/update_notification/',
+                type: 'post',
+                data:{
+                  id: d.target.id
+                },
+                headers: { "X-CSRFToken": token },
+                success: function(response){
+                  const msg = document.getElementById(`msg${d.target.id}`)
+                  msg.remove()
+                  notify.innerText = `${parseInt(notify.innerText)- 1}`
+                  
+                },
+                error: function(error){
+                  console.log('An error occured')
+                }
+              })
+            })
+
+          })
+
+        </script>
         <!-- CoreUI and necessary plugins-->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

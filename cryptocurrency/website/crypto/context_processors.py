@@ -1,4 +1,4 @@
-from .models import CustomUser, History, Notification,SystemEaring, Investment
+from .models import CustomUser, History, Notification,SystemEaring, Investment, NotificationVisibility
 from django.contrib.auth.models import User
 
 def TotalDeposit(request):
@@ -50,18 +50,41 @@ def ActiveEarnings(request):
         return {'earning': None}
     
 def Notify(request):
-    try:
-        notify = Notification.objects.all().count()
-        return {'num':notify}
-    except:
-        return {'num': None, 'data':None}
+    data = NotificationVisibility.objects.filter(user= request.user.pk).count()
+    val = Notification.objects.filter(ended=False).count() 
+    if data:
+        total = int(val-data)
+        return {'num': total}
+    else:
+        return {'num': val}
+    
+    
     
 def Message(request):
-    try:
-        data = Notification.objects.all().filter(ended = False)
-        return {'item':data}
-    except:
-        return {'item':None}
+    data = NotificationVisibility.objects.filter(user= request.user)
+    val = Notification.objects.filter(ended = False)
+    notify_id = []
+    message_id = []
+    item = []
+    if data:
+        for i in val:
+            message_id.append(i.pk)
+        for d in data:
+            notify_id.append(d.notification_id)
+        update_data = list(set(message_id) - set(notify_id))
+        for y in update_data:
+            dats = Notification.objects.filter(pk = y)
+            for j in dats:
+                items = {
+                    'pk': j.pk,
+                    'subject': j.subject,
+                    'message': j.message,
+                    'date_created': j.date_created
+                }
+            item.append(items)
+        return {'item':item}
+    else:
+        return {'item': val}
 
 
 

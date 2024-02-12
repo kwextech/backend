@@ -2,7 +2,12 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from .form import CustomForm,RegisterationForm,DepositForm, UserForm, CustomForms
 from django.contrib import messages
-from .models import Contact,CustomUser,Currency,Payment, History, Withdrawal,Investment, Transfer, Plan, SystemEaring, ReferalBonus, Reinvestment
+from .models import (
+    Contact,CustomUser,Currency,Payment, History, Withdrawal,
+    Investment, Transfer, Plan, SystemEaring, ReferalBonus, Reinvestment,
+    NotificationVisibility
+
+)
 from django.contrib.auth.models import User
 from django.contrib.auth.views import login_required
 from django.template.loader import render_to_string
@@ -371,6 +376,13 @@ def SendBulkEmail(request):
             }
             SendEmail(subject, user, message)
     return JsonResponse({'message': 'Email Successfully Sent'})
+
+@login_required(login_url='/login/') 
+def notification(request):
+    user = request.user
+    id =  request.POST['id']
+    data = NotificationVisibility.objects.update_or_create(user = user, notification_id=int(id))
+    return JsonResponse('successfully updated', safe=False)
         
 
 
