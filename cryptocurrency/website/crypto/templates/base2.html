@@ -143,7 +143,10 @@
                 success: function(response){
                   const msg = document.getElementById(`msg${d.target.id}`)
                   msg.remove()
-                  notify.innerText = `${parseInt(notify.innerText)- 1}`
+                  if(parseInt(notify.innerText) >= 1){
+                    notify.innerText = `${parseInt(notify.innerText)- 1}`
+                  }
+                  
                   
                 },
                 error: function(error){
