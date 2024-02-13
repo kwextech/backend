@@ -61,7 +61,7 @@ def Notify(request):
     
     
 def Message(request):
-    data = NotificationVisibility.objects.filter(user= request.user)
+    data = NotificationVisibility.objects.filter(user= request.user.pk)
     val = Notification.objects.filter(ended = False)
     notify_id = []
     message_id = []
