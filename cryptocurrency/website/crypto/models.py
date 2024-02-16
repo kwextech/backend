@@ -249,9 +249,7 @@ class SystemEaring(models.Model):
             pass
         else:
             if timezone.now() <= self.date_expiration: 
-                if self.num == (diff + 1) and self.balance == diff * profit_per_day:              
-                    pass
-                elif ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
+                if ((diff + 1) - self.num) == 1 and self.balance == diff * profit_per_day:
                     self.balance += profit_per_day
                     self.num += 1
                 else:
