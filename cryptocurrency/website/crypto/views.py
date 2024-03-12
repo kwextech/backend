@@ -265,7 +265,7 @@ def SubmitInvestment(request):
 
     if reinvest.exists():
         counting = Reinvestment.objects.get(user=request.user, plan=select)
-        if counting.plan == 'Starter' and counting.number_of_investment < 2 or counting.plan == 'Premium' and counting.number_of_investment <4:
+        if counting.plan == 'Starter' and counting.number_of_investment < 2 or counting.plan == 'Premium' and counting.number_of_investment <4 or counting.plan == 'Vip' and counting.number_of_investment >= 0:
             invest = Investment.objects.create(user= request.user, plan= select, amount= amount, is_active= True)
             referal =  CustomUser.objects.get(user=request.user)
 
